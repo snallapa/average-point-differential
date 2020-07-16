@@ -77,7 +77,8 @@ from plot import graph_team
 #     apd = totalpd/totaltime
 #     return apd
 
-
+def average(l):
+    return sum(l) / len(l)
     
 if __name__ == '__main__':
     if sys.argv[1] == "season":
@@ -85,7 +86,6 @@ if __name__ == '__main__':
         if len(sys.argv) == 3:
             season = int(sys.argv[2])
         weeks = range(1, 22)
-        total = {}
         week_by_week = {}
         for week in weeks:
             print(f"week {week}")
@@ -94,9 +94,8 @@ if __name__ == '__main__':
                 game_stats = scores(game)
                 stats = calculate_apd(game_stats)
                 for k, v in stats.items():
-                    total[k] = total.get(k, 0) + v
                     week_by_week[k] = week_by_week.get(k, []) + [v]
-        averages = {k: v/16.0 for k, v in total.items()}
+        averages = {k: average(v) for k, v in week_by_week.items()}
         with open(f"{season}.csv", "w") as csvfile:
             seasonwriter = csv.writer(csvfile)
             for k, v in week_by_week.items():
