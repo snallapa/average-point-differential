@@ -18,8 +18,11 @@ def scores(url):
     is_ot = ot.find(string="Overtime")
     if is_ot:
         ot_time = score_col(ot.find(string="Overtime").parent.parent.next_sibling.next_sibling.next_sibling.next_sibling, "qtr_time_remain")
-        m, _ = ot_time.a.text.split(":")
-        OT_TIME = int(m) * 60
+        try:
+            m, _ = ot_time.a.text.split(":")
+            OT_TIME = int(m) * 60
+        except:
+            OT_TIME = QUARTER
 
 
     scoring_table = soup.find("table", id="scoring")
@@ -33,7 +36,7 @@ def scores(url):
         if q:
             quarter = q
         scored_time = score_col(score, "time").text
-        if quarter == "OT":
+        if "OT" in quarter:
             scored_time_m, scored_time_s = scored_time.split(":")
             time = 4 * QUARTER + (OT_TIME - (int(scored_time_m) * 60 + int(scored_time_s)))
         else:
